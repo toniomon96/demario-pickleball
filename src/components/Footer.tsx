@@ -5,8 +5,12 @@ export default function Footer() {
         <div>DeMario Montez · Pickleball Coach</div>
         <div>© 2026</div>
       </div>
-      <div style={{ marginTop: 12, fontSize: 11 }}>
-        demario@coach.pickle · Dallas, TX
+      <div className="contact-line">
+        <a href="mailto:demariomontez10@gmail.com">demariomontez10@gmail.com</a>
+        {" · "}
+        <a href="tel:4693719220">(469) 371-9220</a>
+        {" · "}
+        Dallas, TX
       </div>
     </footer>
   );

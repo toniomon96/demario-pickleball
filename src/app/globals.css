@@ -567,6 +567,9 @@ footer {
   border-top: 1px solid var(--line);
 }
 footer .fwrap { display: flex; justify-content: space-between; align-items: center; }
+footer .contact-line { margin-top: 12px; font-size: 11px; }
+footer .contact-line a { color: inherit; text-decoration: none; }
+footer .contact-line a:hover { color: var(--fg); }
 
 /* ====== STICKY CTA ====== */
 .sticky-cta {
@@ -612,6 +615,7 @@ footer .fwrap { display: flex; justify-content: space-between; align-items: cent
   border: 1px solid var(--line);
   cursor: pointer;
 }
+.sticky-cta .book svg { width: 14px; height: 14px; }
 .sticky-cta .phone svg { width: 16px; height: 16px; }
 
 /* ====== BOOKING MODAL ====== */
