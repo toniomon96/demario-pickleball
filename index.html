@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>DeMario Montez — Pickleball Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: oklch(0.17 0.01 260);
+  --bg-2: oklch(0.21 0.012 260);
+  --bg-3: oklch(0.25 0.013 260);
+  --line: oklch(0.32 0.013 260);
+  --fg: oklch(0.97 0.005 260);
+  --fg-dim: oklch(0.72 0.01 260);
+  --fg-muted: oklch(0.55 0.012 260);
+  --accent: oklch(0.88 0.24 135);
+  --accent-ink: oklch(0.2 0.05 135);
+  --danger: oklch(0.7 0.2 25);
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.display, h1, h2, h3, .num {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  font-weight: 600;
+}
+
+button { font: inherit; border: none; cursor: pointer; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ====== PHONE CANVAS ====== */
+.device {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  background: var(--bg);
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 40px 120px -20px rgba(0,0,0,0.6);
+}
+
+/* ====== TOP NAV ====== */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: color-mix(in oklab, var(--bg) 85%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid color-mix(in oklab, var(--line) 50%, transparent);
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: 16px;
+}
+.brand-mark {
+  width: 26px; height: 26px; border-radius: 8px;
+  background: var(--accent);
+  display: grid; place-items: center;
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 13px;
+}
+.menu-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+}
+.menu-btn svg { width: 16px; height: 16px; }
+
+/* ====== HERO ====== */
+.hero {
+  position: relative;
+  min-height: 720px;
+  padding: 80px 22px 32px;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background-image: url('img/hero-ready.jpg');
+  background-size: cover;
+  background-position: 58% 20%;
+  filter: saturate(0.9) contrast(1.05);
+}
+.hero-bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--bg) 55%, transparent) 0%,
+      color-mix(in oklab, var(--bg) 25%, transparent) 30%,
+      color-mix(in oklab, var(--bg) 70%, transparent) 55%,
+      color-mix(in oklab, var(--bg) 92%, transparent) 75%,
+      var(--bg) 100%);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  margin-top: 300px;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+.eyebrow .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+h1.hero-title {
+  font-size: clamp(44px, 13vw, 64px);
+  margin: 18px 0 14px;
+  line-height: 0.92;
+  font-weight: 600;
+}
+h1.hero-title .italic {
+  font-style: italic;
+  font-family: 'Space Grotesk', serif;
+  color: var(--accent);
+}
+.hero-sub {
+  color: var(--fg);
+  opacity: 0.92;
+  font-size: 16px;
+  max-width: 34ch;
+  margin: 0 0 24px;
+  text-shadow: 0 1px 14px rgba(0,0,0,0.5);
+}
+
+.cta-row { display: flex; gap: 10px; align-items: center; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: transform .15s ease, background .15s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.btn-primary:hover { background: color-mix(in oklab, var(--accent) 85%, white); }
+.btn-ghost {
+  color: var(--fg);
+  border: 1px solid var(--line);
+}
+.btn svg { width: 14px; height: 14px; }
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.hero-stat { overflow: hidden; }
+.hero-stat .num {
+  font-size: 28px;
+  color: var(--fg);
+  font-weight: 600;
+}
+.hero-stat .num .unit { color: var(--accent); font-size: 16px; margin-left: 2px; }
+.hero-stat .label {
+  font-size: 10px;
+  color: var(--fg-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ====== TRUST BAR ====== */
+.trust {
+  padding: 20px 18px;
+  background: var(--bg-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.trust-marquee {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px 4px;
+}
+.trust-marquee::-webkit-scrollbar { display: none; }
+.trust-chip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+.trust-chip strong { color: var(--fg); font-weight: 600; }
+.trust-chip .ico { width: 18px; height: 18px; color: var(--accent); flex-shrink: 0; }
+.trust-chip.rating strong { font-family: 'Space Grotesk'; font-size: 15px; }
+
+/* ====== SECTION ====== */
+section.block { padding: 64px 22px; position: relative; }
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.kicker::before { content: ""; width: 18px; height: 1px; background: var(--accent); display: inline-block; }
+.section-title {
+  font-size: 40px;
+  margin: 0 0 16px;
+  line-height: 0.95;
+}
+.section-title .italic { font-style: italic; color: var(--accent); }
+.section-sub { color: var(--fg-dim); font-size: 15px; margin: 0 0 28px; max-width: 38ch; }
+
+/* ====== TESTIMONIALS ====== */
+.featured-review {
+  padding: 28px 22px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  position: relative;
+}
+.stars { display: flex; gap: 2px; color: var(--accent); margin-bottom: 14px; }
+.stars svg { width: 14px; height: 14px; fill: var(--accent); }
+.featured-quote {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px;
+  color: var(--fg);
+  font-weight: 500;
+}
+.featured-quote .accent { color: var(--accent); }
+.review-author {
+  display: flex; align-items: center; gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--bg-3);
+  display: grid; place-items: center;
+  font-weight: 600;
+  color: var(--fg);
+  font-size: 14px;
+  border: 1px solid var(--line);
+}
+.author-name { font-weight: 600; font-size: 14px; }
+.author-meta { font-size: 12px; color: var(--fg-muted); }
+
+.review-pager {
+  display: flex; gap: 6px; margin-top: 18px; justify-content: center;
+}
+.review-pager button {
+  width: 20px; height: 3px; border-radius: 2px;
+  background: var(--line);
+  transition: background .2s, width .2s;
+}
+.review-pager button.active { background: var(--accent); width: 34px; }
+
+.small-reviews {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+.small-review {
+  padding: 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 13.5px;
+  color: var(--fg-dim);
+  line-height: 1.45;
+}
+.small-review .stars { margin-bottom: 8px; }
+.small-review .name { color: var(--fg); font-weight: 600; font-size: 12px; margin-top: 10px; }
+
+/* ====== IMPROVE GRID ====== */
+.improve-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.improve-card {
+  padding: 20px 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color .2s, background .2s;
+}
+.improve-card:hover { border-color: color-mix(in oklab, var(--accent) 50%, var(--line)); }
+.improve-ico {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--accent) 15%, var(--bg-3));
+  display: grid; place-items: center;
+  color: var(--accent);
+}
+.improve-ico svg { width: 16px; height: 16px; }
+.improve-card h3 { font-size: 15px; margin: 12px 0 6px; line-height: 1.15; font-family: 'Inter', sans-serif; letter-spacing: -0.01em; font-weight: 600; }
+.improve-card p { font-size: 12px; color: var(--fg-muted); margin: 0; line-height: 1.4; }
+
+/* ====== PHILOSOPHY ====== */
+.philosophy { background: var(--bg-2); }
+.philosophy-quote {
+  font-size: 36px;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0 0 28px;
+  font-weight: 600;
+}
+.philosophy-quote .accent { color: var(--accent); font-style: italic; }
+.philosophy-quote .strike { text-decoration: line-through; color: var(--fg-muted); }
+.pillars { display: grid; gap: 14px; }
+.pillar {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.pillar:last-child { border-bottom: 1px solid var(--line); }
+.pillar .n {
+  font-family: 'Space Grotesk';
+  color: var(--accent);
+  font-size: 13px;
+  width: 28px; flex-shrink: 0;
+  margin-top: 2px;
+  font-weight: 600;
+}
+.pillar h4 { margin: 0 0 4px; font-size: 14px; font-weight: 600; }
+.pillar p { margin: 0; font-size: 12.5px; color: var(--fg-muted); line-height: 1.5; }
+
+/* ====== LESSONS ====== */
+.lesson-tabs {
+  display: flex;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+.lesson-tab {
+  flex: 1;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  border-radius: 8px;
+  transition: background .2s, color .2s;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+.lesson-tab.active {
+  background: var(--bg-3);
+  color: var(--fg);
+}
+.lesson-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+.lesson-head {
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line);
+}
+.lesson-head h3 {
+  font-size: 24px;
+  margin: 0 0 6px;
+  font-family: 'Space Grotesk';
+  font-weight: 600;
+}
+.lesson-head .desc { font-size: 12.5px; color: var(--fg-muted); max-width: 22ch; line-height: 1.4; }
+.lesson-price { text-align: right; }
+.lesson-price .amt { font-family: 'Space Grotesk'; font-size: 28px; font-weight: 600; }
+.lesson-price .per { font-size: 11px; color: var(--fg-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+.lesson-steps { padding: 6px 22px 22px; }
+.lesson-step {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  align-items: flex-start;
+  border-bottom: 1px dashed color-mix(in oklab, var(--line) 70%, transparent);
+}
+.lesson-step:last-child { border-bottom: none; }
+.step-time {
+  font-family: 'Space Grotesk';
+  font-size: 13px;
+  color: var(--accent);
+  width: 44px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  padding-top: 1px;
+  font-weight: 600;
+}
+.step-body h5 { margin: 0 0 3px; font-size: 13.5px; font-weight: 600; }
+.step-body p { margin: 0; font-size: 12px; color: var(--fg-muted); line-height: 1.4; }
+
+/* ====== ABOUT ====== */
+.about { background: var(--bg); }
+.about-img {
+  aspect-ratio: 4/5;
+  background-size: cover;
+  background-position: center top;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  position: relative;
+  overflow: hidden;
+}
+.about-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, color-mix(in oklab, var(--bg) 70%, transparent) 100%);
+}
+.about-badge {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.mini-badge {
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--bg) 75%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in oklab, var(--fg) 20%, transparent);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg);
+}
+.mini-badge .dot { display: inline-block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 22px;
+}
+.about-stat { background: var(--bg-2); padding: 16px; }
+.about-stat .num { font-size: 22px; font-family: 'Space Grotesk'; font-weight: 600; }
+.about-stat .label { font-size: 10.5px; color: var(--fg-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
+
+/* ====== GALLERY ====== */
+.gallery {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+  grid-auto-rows: 130px;
+}
+.gallery > div {
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+.gallery > div.tall { grid-row: span 2; }
+.gallery > div.wide { grid-column: span 2; }
+
+/* ====== FINAL CTA ====== */
+.final-cta {
+  padding: 72px 22px 120px;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+.final-cta::before {
+  content: "";
+  position: absolute;
+  inset: -40% -40% 20% -40%;
+  background: radial-gradient(ellipse at center top, color-mix(in oklab, var(--accent) 18%, transparent) 0%, transparent 55%);
+  pointer-events: none;
+}
+.final-title {
+  font-size: clamp(40px, 11vw, 52px);
+  line-height: 0.92;
+  margin: 0 0 16px;
+  position: relative;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.final-title .italic { font-style: italic; color: var(--accent); }
+.final-sub { color: var(--fg-dim); margin: 0 0 24px; font-size: 14.5px; max-width: 34ch; }
+.final-cta .cta-inline {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+.final-cta .btn { padding: 14px 20px; font-size: 14px; }
+.final-cta .meta-line {
+  display: flex;
+  gap: 18px;
+  margin-top: 22px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  font-weight: 600;
+}
+.final-cta .meta-line span { display: inline-flex; align-items: center; gap: 6px; }
+.final-cta .meta-line .mdot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+
+/* ====== FOOTER ====== */
+footer {
+  padding: 28px 22px 120px;
+  font-size: 12px;
+  color: var(--fg-muted);
+  border-top: 1px solid var(--line);
+}
+footer .fwrap { display: flex; justify-content: space-between; align-items: center; }
+
+/* ====== STICKY CTA ====== */
+.sticky-cta {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translate(-50%, 20px);
+  width: min(calc(100% - 32px), 398px);
+  z-index: 50;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: color-mix(in oklab, var(--bg-2) 92%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: 0 20px 60px -10px rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.sticky-cta.shown {
+  opacity: 1;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+.sticky-cta .book {
+  flex: 1;
+  display: inline-flex; justify-content: center; align-items: center; gap: 8px;
+  padding: 12px 16px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+.sticky-cta .phone {
+  width: 42px; height: 42px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.sticky-cta .phone svg { width: 16px; height: 16px; }
+
+/* ====== BOOKING MODAL ====== */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  z-index: 100;
+  background: color-mix(in oklab, black 70%, transparent);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  width: 100%;
+  max-width: 430px;
+  background: var(--bg-2);
+  border-top: 1px solid var(--line);
+  border-radius: 28px 28px 0 0;
+  padding: 24px 22px 30px;
+  animation: slideUp .3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.modal-grip { width: 40px; height: 4px; background: var(--line); border-radius: 2px; margin: 0 auto 16px; }
+.modal h3 { font-size: 22px; margin: 0 0 8px; font-family: 'Space Grotesk'; font-weight: 600; }
+.modal p.m-sub { font-size: 13px; color: var(--fg-muted); margin: 0 0 18px; }
+
+.slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
+.slot {
+  padding: 12px 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 12px;
+  transition: all .15s;
+  background: var(--bg-3);
+  cursor: pointer;
+}
+.slot .d { font-family: 'Space Grotesk'; font-size: 10px; color: var(--fg-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.slot .n { font-family: 'Space Grotesk'; font-size: 18px; margin-top: 3px; font-weight: 600; }
+.slot.selected { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.slot.selected .d { color: var(--accent-ink); opacity: 0.7; }
+
+.time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+.time-slot {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-3);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  font-family: 'Space Grotesk';
+  cursor: pointer;
+  transition: all .15s;
+}
+.time-slot.selected { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.time-slot.booked { opacity: 0.35; text-decoration: line-through; pointer-events: none; }
+
+.modal .btn { width: 100%; justify-content: center; padding: 16px; font-size: 15px; }
+
+/* ====== REVEAL ====== */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ====== LABEL TAG ====== */
+.label-tag {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  font-weight: 600;
+  margin: 8px 0 10px;
+}
+
+/* ====== CONFIRM STATE ====== */
+.confirm-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink);
+  display: grid; place-items: center;
+  margin: 0 auto 16px;
+}
+.confirm-icon svg { width: 28px; height: 28px; }
+.booking-summary {
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--fg-dim);
+}
+.booking-summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.booking-summary-row:last-child { margin-bottom: 0; }
+.booking-summary-row strong { color: var(--fg); }
+.booking-summary-row .accent { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="device" id="device">
+  <!-- Top Nav -->
+  <nav class="topnav">
+    <div class="brand">
+      <div class="brand-mark">D</div>
+      <span>DeMario<span style="color:var(--fg-muted)"> / Coach</span></span>
+    </div>
+    <button class="menu-btn" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content reveal">
+      <div class="eyebrow"><span class="dot"></span>Dallas–Fort Worth · Head Pro</div>
+      <h1 class="hero-title">Train smarter.<br/>Compete <span class="italic">better.</span></h1>
+      <p class="hero-sub">Strategic 1:1 pickleball coaching built around how you actually play — so you stop guessing and start winning.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" onclick="openBooking()">Book a lesson
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn btn-ghost">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M8 5v14l11-7z"/></svg>
+          Watch
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num">4.6<span class="unit">DUPR</span></div>
+          <div class="label">Sngl &amp; Dbl DUPR</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">5.0<span class="unit">★</span></div>
+          <div class="label">79 reviews</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">Top 3%</div>
+          <div class="label">SuperCoach</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Bar -->
+  <div class="trust">
+    <div class="trust-marquee">
+      <div class="trust-chip">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span><strong>SuperCoach</strong> · Top 3% · TeachMe.To</span>
+      </div>
+      <div class="trust-chip">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span><strong>USTA</strong> · Certified Coach</span>
+      </div>
+      <div class="trust-chip">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span><strong>DUPR</strong> · Certified 4.6</span>
+      </div>
+      <div class="trust-chip">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span><strong>Dallas Indoor</strong> · Head Pro</span>
+      </div>
+      <div class="trust-chip rating">
+        <svg class="ico" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span><strong>5.0 ★</strong> · 79 reviews</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  <section class="block" id="testimonials">
+    <div class="reveal">
+      <div class="kicker">Proof</div>
+      <h2 class="section-title">Players ranked up.<br/><span class="italic">Every one of them.</span></h2>
+    </div>
+    <div class="reveal" style="transition-delay:100ms">
+      <div class="featured-review" id="featuredReview">
+        <div class="stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="featured-quote" id="featuredQuote"></p>
+        <div class="review-author">
+          <div class="avatar" id="featuredInitial"></div>
+          <div>
+            <div class="author-name" id="featuredName"></div>
+            <div class="author-meta" id="featuredMeta"></div>
+          </div>
+        </div>
+      </div>
+      <div class="review-pager" id="reviewPager"></div>
+    </div>
+    <div class="reveal" style="transition-delay:150ms">
+      <div class="small-reviews">
+        <div class="small-review">
+          <div class="stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>"Actually explains WHY, not just what. Game-changer."</div>
+          <div class="name">— David L.</div>
+        </div>
+        <div class="small-review">
+          <div class="stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>"Patient, sharp, and fun. My wife and I both take lessons now."</div>
+          <div class="name">— Carlos M.</div>
+        </div>
+        <div class="small-review">
+          <div class="stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>"First coach that made strategy feel doable at a 3.0 level."</div>
+          <div class="name">— Priya S.</div>
+        </div>
+        <div class="small-review">
+          <div class="stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>"Showed up for my tournament to scout opponents. Unreal."</div>
+          <div class="name">— Tom B.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Improve -->
+  <section class="block" style="background:var(--bg-2)">
+    <div class="reveal">
+      <div class="kicker">What You'll Improve</div>
+      <h2 class="section-title">Four weak spots.<br/><span class="italic">Fixed with a plan.</span></h2>
+      <p class="section-sub">Every lesson targets one — never a random bucket drill.</p>
+    </div>
+    <div class="improve-list">
+      <div class="reveal" style="transition-delay:0ms">
+        <div class="improve-card">
+          <div class="improve-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0112 4.5v15a2.5 2.5 0 01-4.96.44 2.5 2.5 0 01-2.96-3.08 3 3 0 01-.34-5.58 2.5 2.5 0 011.32-4.24 2.5 2.5 0 014.44-1.04z"/><path d="M14.5 2A2.5 2.5 0 0112 4.5v15a2.5 2.5 0 004.96.44 2.5 2.5 0 002.96-3.08 3 3 0 00.34-5.58 2.5 2.5 0 00-1.32-4.24 2.5 2.5 0 00-4.44-1.04z"/></svg>
+          </div>
+          <div>
+            <h3>Strategy & Decision-Making</h3>
+            <p>Read the court. Pick the right shot. Every time.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:80ms">
+        <div class="improve-card">
+          <div class="improve-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+          </div>
+          <div>
+            <h3>Shot Consistency</h3>
+            <p>Dinks, drives, drops — rehearsed until automatic.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:160ms">
+        <div class="improve-card">
+          <div class="improve-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/></svg>
+          </div>
+          <div>
+            <h3>Court Positioning</h3>
+            <p>Own the kitchen line. Control the point before it starts.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:240ms">
+        <div class="improve-card">
+          <div class="improve-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div>
+            <h3>Confidence Under Pressure</h3>
+            <p>Train the mental game so tournament nerves vanish.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Philosophy -->
+  <section class="block philosophy">
+    <div class="reveal">
+      <div class="kicker">Philosophy</div>
+      <p class="philosophy-quote">
+        Most coaches teach <span class="strike">drills.</span><br/>I teach you how to <span class="accent">win the point.</span>
+      </p>
+    </div>
+    <div class="pillars">
+      <div class="reveal" style="transition-delay:0ms">
+        <div class="pillar">
+          <div class="n">01</div>
+          <div>
+            <h4>Read before you react.</h4>
+            <p>Awareness beats athleticism. We train the scan, not just the swing.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:80ms">
+        <div class="pillar">
+          <div class="n">02</div>
+          <div>
+            <h4>Patterns, not hope.</h4>
+            <p>Every point is a decision tree. I'll show you the right branches.</p>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:160ms">
+        <div class="pillar">
+          <div class="n">03</div>
+          <div>
+            <h4>Pressure is a skill.</h4>
+            <p>Routines and breath work so your A-game shows up in the third game.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lessons -->
+  <section class="block" id="lessons">
+    <div class="reveal">
+      <div class="kicker">Lesson Structure</div>
+      <h2 class="section-title">Pick your <span class="italic">path.</span></h2>
+      <p class="section-sub">Every session is coached — not just timed court rental.</p>
+    </div>
+    <div class="reveal" style="transition-delay:100ms">
+      <div class="lesson-tabs">
+        <button class="lesson-tab active" onclick="switchLesson('beginner', this)">Foundations</button>
+        <button class="lesson-tab" onclick="switchLesson('advanced', this)">Strategy</button>
+        <button class="lesson-tab" onclick="switchLesson('clinic', this)">Clinic</button>
+      </div>
+      <div class="lesson-card" id="lessonCard"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="block about">
+    <div class="reveal">
+      <div class="kicker">About the Coach</div>
+      <h2 class="section-title">DeMario <span class="italic">Montez.</span></h2>
+    </div>
+    <div class="reveal" style="transition-delay:80ms">
+      <div class="about-img" style="background-image:url('img/podium-solo.jpg')">
+        <div class="about-badge">
+          <div class="mini-badge"><span class="dot"></span>Head Pro</div>
+          <div class="mini-badge">Farmers Branch, TX</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:120ms">
+      <p style="color:var(--fg-dim);font-size:15px;margin:0 0 16px">
+        I'm a 4.6 DUPR player, USTA/DUPR certified coach, and Head Pro at Dallas Indoor Pickleball Club. I built my game the hard way — film study, repeatable patterns, pressure-testing every shot. Now I build yours the same way.
+      </p>
+      <p style="color:var(--fg-muted);font-size:14px;margin:0">
+        I'll meet you at your level, diagnose the three things holding you back, and give you a plan you can actually execute — on the court and in your head.
+      </p>
+      <div class="about-stats">
+        <div class="about-stat"><div class="num">4.612</div><div class="label">Doubles DUPR</div></div>
+        <div class="about-stat"><div class="num">4.629</div><div class="label">Singles DUPR</div></div>
+        <div class="about-stat"><div class="num">500+</div><div class="label">Lessons Taught</div></div>
+        <div class="about-stat"><div class="num">12</div><div class="label">Tournament Podiums</div></div>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:180ms">
+      <div style="margin-top:28px">
+        <div class="kicker">On the Court</div>
+      </div>
+      <div class="gallery">
+        <div class="tall" style="background-image:url('img/students-group.jpg')" role="img" aria-label="Students group photo"></div>
+        <div style="background-image:url('img/student-selfie.jpg')" role="img" aria-label="Student selfie"></div>
+        <div style="background-image:url('img/doubles-medal.jpg')" role="img" aria-label="Doubles medal"></div>
+        <div class="wide" style="background-image:url('img/podium-team.jpg')" role="img" aria-label="Podium team photo"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <div class="reveal">
+      <h2 class="final-title">Start improving <span class="italic">today.</span></h2>
+      <p class="final-sub">First lesson is a plan, not a pitch. You'll leave with three things to practice.</p>
+      <div class="cta-inline">
+        <button class="btn btn-primary" onclick="openBooking()">Book your first lesson
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div class="meta-line">
+        <span><span class="mdot"></span>60 min</span>
+        <span><span class="mdot"></span>From $90</span>
+        <span><span class="mdot"></span>Dallas, TX</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="fwrap">
+      <div>DeMario Montez · Pickleball Coach</div>
+      <div>© 2026</div>
+    </div>
+    <div style="margin-top:12px;font-size:11px">demario@coach.pickle · Dallas, TX</div>
+  </footer>
+</div>
+
+<!-- Sticky CTA -->
+<div class="sticky-cta" id="stickyCta">
+  <button class="book" onclick="openBooking()">Book a lesson
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </button>
+  <button class="phone" aria-label="Call">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"/></svg>
+  </button>
+</div>
+
+<!-- Booking Modal -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="handleBackdropClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-grip"></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const REVIEWS = [
+  {
+    quote: "DeMario doesn't just teach you how to hit the ball — he teaches you how to think the point. Two months in and I'm reading opponents in a way I never could before.",
+    accentWord: "think the point",
+    name: "Rachel K.",
+    meta: "Intermediate · 12 lessons",
+    initial: "R"
+  },
+  {
+    quote: "Most coaches feed you balls for an hour. DeMario built a real plan around my weak spots. My DUPR jumped 0.4 in a season.",
+    accentWord: null,
+    name: "Marcus T.",
+    meta: "Competitive · 20 lessons",
+    initial: "M"
+  },
+  {
+    quote: "I was the person dinking into the net every point. After four sessions I played my first tournament — and won my first match.",
+    accentWord: null,
+    name: "Jenna P.",
+    meta: "Beginner · 6 lessons",
+    initial: "J"
+  }
+];
+
+const LESSONS = {
+  beginner: {
+    name: "Foundations",
+    desc: "For new players and anyone under 3.5 DUPR.",
+    price: "$90",
+    per: "per hour",
+    steps: [
+      { t: "0:00", h: "Warm-up + assessment", p: "Quick rally to calibrate where you're at today." },
+      { t: "0:10", h: "Technique block", p: "One focus: dink, drive, serve, or return. Filmed for review." },
+      { t: "0:30", h: "Live drills", p: "Game-speed reps. I feed, you execute, we adjust." },
+      { t: "0:50", h: "Mini-match", p: "Put it into a real point. Coached in real-time." },
+      { t: "0:55", h: "Debrief + homework", p: "Two specific things to practice before next session." }
+    ]
+  },
+  advanced: {
+    name: "Strategy Lab",
+    desc: "For 3.5+ players ready to level up their thinking.",
+    price: "$125",
+    per: "per hour",
+    steps: [
+      { t: "0:00", h: "Film review", p: "We watch 5 minutes of your last match. Patterns, leaks, tells." },
+      { t: "0:15", h: "Tactical concept", p: "One theme per lesson: resets, stacking, third-shot strategy." },
+      { t: "0:30", h: "Situational drills", p: "Re-create the scenarios you lose. Solve them live." },
+      { t: "0:50", h: "Scouted match play", p: "I play you. Probing your weaknesses so you can patch them." },
+      { t: "1:05", h: "Game plan", p: "Written notes + a tournament-ready mental checklist." }
+    ]
+  },
+  clinic: {
+    name: "Group Clinic",
+    desc: "Small-group. 3–4 players, 90 minutes, sharp focus.",
+    price: "$55",
+    per: "per player",
+    steps: [
+      { t: "0:00", h: "Rotation warm-up", p: "Everyone moves, everyone hits. No standing around." },
+      { t: "0:15", h: "Themed block", p: "Weekly topic — resets, stacking, poaching, or serve+3." },
+      { t: "0:45", h: "Competitive drills", p: "King-of-the-court style. Pressure with purpose." },
+      { t: "1:15", h: "Open play + coaching", p: "Real games. I rotate between courts giving cues." }
+    ]
+  }
+};
+
+const DAYS = [
+  { d: "Mon", n: 27 }, { d: "Tue", n: 28 }, { d: "Wed", n: 29 },
+  { d: "Thu", n: 30 }, { d: "Fri", n: 1  }, { d: "Sat", n: 2  },
+  { d: "Sun", n: 3  }, { d: "Mon", n: 4  }
+];
+const TIMES = ["7:00 AM","9:00 AM","11:00 AM","1:00 PM","3:00 PM","5:30 PM"];
+const BOOKED = ["9:00 AM","3:00 PM"];
+
+// ============================================================
+// STATE
+// ============================================================
+let reviewIdx = 0;
+let reviewTimer = null;
+let selectedDay = 1;
+let selectedTime = "5:30 PM";
+let confirmed = false;
+let currentLesson = "beginner";
+
+// ============================================================
+// TESTIMONIAL CAROUSEL
+// ============================================================
+function renderReview() {
+  const r = REVIEWS[reviewIdx];
+
+  // Build quote with accent
+  let quoteHtml = r.quote;
+  if (r.accentWord) {
+    quoteHtml = r.quote.replace(r.accentWord, `<span class="accent">${r.accentWord}</span>`);
+  }
+
+  document.getElementById("featuredQuote").innerHTML = `"${quoteHtml}"`;
+  document.getElementById("featuredInitial").textContent = r.initial;
+  document.getElementById("featuredName").textContent = r.name;
+  document.getElementById("featuredMeta").textContent = r.meta;
+
+  // Pager
+  const pager = document.getElementById("reviewPager");
+  pager.innerHTML = REVIEWS.map((_, i) =>
+    `<button class="${i === reviewIdx ? 'active' : ''}" onclick="goReview(${i})" aria-label="Review ${i+1}"></button>`
+  ).join("");
+}
+
+function goReview(i) {
+  reviewIdx = i;
+  renderReview();
+  clearInterval(reviewTimer);
+  reviewTimer = setInterval(nextReview, 6000);
+}
+
+function nextReview() {
+  reviewIdx = (reviewIdx + 1) % REVIEWS.length;
+  renderReview();
+}
+
+// ============================================================
+// LESSON TABS
+// ============================================================
+function renderLesson(key) {
+  const l = LESSONS[key];
+  const stepsHtml = l.steps.map(s => `
+    <div class="lesson-step">
+      <div class="step-time">${s.t}</div>
+      <div class="step-body">
+        <h5>${s.h}</h5>
+        <p>${s.p}</p>
+      </div>
+    </div>
+  `).join("");
+
+  document.getElementById("lessonCard").innerHTML = `
+    <div class="lesson-head">
+      <div>
+        <h3>${l.name}</h3>
+        <div class="desc">${l.desc}</div>
+      </div>
+      <div class="lesson-price">
+        <div class="amt">${l.price}</div>
+        <div class="per">${l.per}</div>
+      </div>
+    </div>
+    <div class="lesson-steps">${stepsHtml}</div>
+  `;
+}
+
+function switchLesson(key, btn) {
+  currentLesson = key;
+  document.querySelectorAll(".lesson-tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  renderLesson(key);
+}
+
+// ============================================================
+// BOOKING MODAL
+// ============================================================
+function openBooking() {
+  confirmed = false;
+  selectedDay = 1;
+  selectedTime = "5:30 PM";
+  renderModal();
+  document.getElementById("modalBackdrop").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeBooking() {
+  document.getElementById("modalBackdrop").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById("modalBackdrop")) closeBooking();
+}
+
+function renderModal() {
+  if (confirmed) {
+    const d = DAYS[selectedDay];
+    document.getElementById("modalContent").innerHTML = `
+      <div style="text-align:center;padding:20px 0 10px">
+        <div class="confirm-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 style="margin-bottom:8px">You're booked.</h3>
+        <p class="m-sub" style="margin-bottom:24px">${d.d} ${d.n} at ${selectedTime} · See you on the court.</p>
+        <div class="booking-summary">
+          <div class="booking-summary-row"><span>Lesson</span><strong>Foundations</strong></div>
+          <div class="booking-summary-row"><span>Coach</span><strong>DeMario Montez</strong></div>
+          <div class="booking-summary-row"><span>Location</span><strong>Dallas Indoor PBC</strong></div>
+          <div class="booking-summary-row"><span>Total</span><strong class="accent">$90.00</strong></div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeBooking()" style="width:100%;justify-content:center">Close</button>
+      </div>
+    `;
+    return;
+  }
+
+  const dayRows = [
+    DAYS.slice(0, 4).map((s, i) =>
+      `<button class="slot ${selectedDay === i ? 'selected' : ''}" onclick="selectDay(${i})">
+        <div class="d">${s.d}</div><div class="n">${s.n}</div>
+      </button>`
+    ).join(""),
+    DAYS.slice(4, 8).map((s, i) =>
+      `<button class="slot ${selectedDay === i+4 ? 'selected' : ''}" onclick="selectDay(${i+4})">
+        <div class="d">${s.d}</div><div class="n">${s.n}</div>
+      </button>`
+    ).join("")
+  ];
+
+  const timesHtml = TIMES.map(t => {
+    const isBooked = BOOKED.includes(t);
+    const isSelected = selectedTime === t;
+    return `<button class="time-slot ${isSelected ? 'selected' : ''} ${isBooked ? 'booked' : ''}"
+      ${isBooked ? 'disabled aria-disabled="true"' : `onclick="selectTime('${t}')"`}>${t}</button>`;
+  }).join("");
+
+  const d = DAYS[selectedDay];
+  document.getElementById("modalContent").innerHTML = `
+    <h3>Book a lesson</h3>
+    <p class="m-sub">Foundations · 60 minutes · $90 · Dallas Indoor Pickleball Club</p>
+    <div class="label-tag">Select day</div>
+    <div class="slot-grid">${dayRows[0]}</div>
+    <div class="slot-grid" style="margin-top:-8px">${dayRows[1]}</div>
+    <div class="label-tag" style="margin-top:18px">Select time</div>
+    <div class="time-grid">${timesHtml}</div>
+    <button class="btn btn-primary" onclick="confirmBooking()">
+      Confirm ${d.d} ${d.n} · ${selectedTime}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </button>
+  `;
+}
+
+function selectDay(i) {
+  selectedDay = i;
+  renderModal();
+}
+
+function selectTime(t) {
+  selectedTime = t;
+  renderModal();
+}
+
+function confirmBooking() {
+  confirmed = true;
+  renderModal();
+}
+
+// ============================================================
+// STICKY CTA
+// ============================================================
+window.addEventListener("scroll", () => {
+  const cta = document.getElementById("stickyCta");
+  if (window.scrollY > 500) {
+    cta.classList.add("shown");
+  } else {
+    cta.classList.remove("shown");
+  }
+}, { passive: true });
+
+// ============================================================
+// SCROLL REVEALS
+// ============================================================
+function initReveals() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener("DOMContentLoaded", () => {
+  renderReview();
+  reviewTimer = setInterval(nextReview, 6000);
+  renderLesson("beginner");
+  initReveals();
+});
+</script>
+</body>
+</html>
