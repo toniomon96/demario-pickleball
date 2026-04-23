@@ -127,8 +127,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <h3>Book a lesson</h3>
             <p className="m-sub">Fill in your details to reserve a spot.</p>
             <div className="modal-form-group">
-              <label>Your name</label>
+              <label htmlFor="bm-name">Your name</label>
               <input
+                id="bm-name"
                 className="modal-input"
                 type="text"
                 placeholder="Jane Smith"
@@ -137,8 +138,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               />
             </div>
             <div className="modal-form-group">
-              <label>Email</label>
+              <label htmlFor="bm-email">Email</label>
               <input
+                id="bm-email"
                 className="modal-input"
                 type="email"
                 placeholder="jane@example.com"
@@ -147,8 +149,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               />
             </div>
             <div className="modal-form-group">
-              <label>Phone (optional)</label>
+              <label htmlFor="bm-phone">Phone (optional)</label>
               <input
+                id="bm-phone"
                 className="modal-input"
                 type="tel"
                 placeholder="(555) 000-0000"

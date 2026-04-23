@@ -87,7 +87,7 @@ export default function ContactForm() {
               <textarea
                 id="cf-message"
                 className="modal-input"
-                placeholder="What&apos;s on your mind?"
+                placeholder="What's on your mind?"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
