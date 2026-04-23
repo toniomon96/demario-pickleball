@@ -833,6 +833,31 @@ footer .contact-line a:hover { color: var(--fg); }
 .inq-date { font-size: 11px; color: var(--fg-muted); margin-top: 8px; }
 .brand-muted { color: var(--fg-muted); }
 
+/* ====== BOOKING PLATFORMS ====== */
+.book-platforms { padding: 48px 22px 0; }
+.bp-header { margin-bottom: 20px; }
+.bp-sub { font-size: 14px; color: var(--fg-muted); margin: 8px 0 0; line-height: 1.6; }
+.bp-list { display: flex; flex-direction: column; gap: 10px; }
+.bp-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--fg);
+  transition: border-color 0.15s, background 0.15s;
+}
+.bp-card:hover { border-color: var(--accent); background: var(--bg-3); }
+.bp-card-phone { border-style: dashed; }
+.bp-card-text { flex: 1; min-width: 0; }
+.bp-name { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+.bp-desc { font-size: 13px; color: var(--fg-muted); line-height: 1.5; }
+.bp-arrow { width: 18px; height: 18px; flex-shrink: 0; color: var(--accent); }
+
 /* ====== DESKTOP RESPONSIVE ====== */
 @media (min-width: 768px) {
   .device {

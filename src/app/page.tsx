@@ -10,6 +10,7 @@ import Philosophy from "@/components/Philosophy";
 import Lessons from "@/components/Lessons";
 import About from "@/components/About";
 import FinalCta from "@/components/FinalCta";
+import BookingPlatforms from "@/components/BookingPlatforms";
 import Footer from "@/components/Footer";
 import StickyCta from "@/components/StickyCta";
 import BookingModal from "@/components/BookingModal";
@@ -28,6 +29,7 @@ export default function Home() {
       <Lessons />
       <About />
       <FinalCta onOpenBooking={() => setModalOpen(true)} />
+      <BookingPlatforms />
       <Footer />
       <StickyCta onOpenBooking={() => setModalOpen(true)} />
       <BookingModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
