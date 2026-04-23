@@ -12,6 +12,7 @@ import About from "@/components/About";
 import FinalCta from "@/components/FinalCta";
 import BookingPlatforms from "@/components/BookingPlatforms";
 import ContactForm from "@/components/ContactForm";
+import CookieBanner from "@/components/CookieBanner";
 import Footer from "@/components/Footer";
 import StickyCta from "@/components/StickyCta";
 import BookingModal from "@/components/BookingModal";
@@ -35,6 +36,7 @@ export default function Home() {
       <Footer />
       <StickyCta onOpenBooking={() => setModalOpen(true)} />
       <BookingModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <CookieBanner />
     </div>
   );
 }

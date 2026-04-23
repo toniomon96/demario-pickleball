@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { REVIEWS } from "@/lib/data";
 
 const Stars = () => (
@@ -28,23 +28,31 @@ function renderQuote(quote: string, accentWord: string | null) {
 export default function Testimonials() {
   const [idx, setIdx] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pausedRef = useRef(false);
+
+  const startTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      if (!pausedRef.current) {
+        setIdx((prev) => (prev + 1) % REVIEWS.length);
+      }
+    }, 6000);
+  }, []);
 
   function goReview(i: number) {
     setIdx(i);
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setIdx((prev) => (prev + 1) % REVIEWS.length);
-    }, 6000);
+    startTimer();
   }
 
+  function pause() { pausedRef.current = true; }
+  function resume() { pausedRef.current = false; }
+
   useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setIdx((prev) => (prev + 1) % REVIEWS.length);
-    }, 6000);
+    startTimer();
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, []);
+  }, [startTimer]);
 
   const r = REVIEWS[idx];
 
@@ -58,7 +66,13 @@ export default function Testimonials() {
           <span className="italic">Every one of them.</span>
         </h2>
       </div>
-      <div className="reveal in" style={{ transitionDelay: "100ms" }}>
+      <div
+        className="reveal in reveal-d100"
+        onMouseEnter={pause}
+        onMouseLeave={resume}
+        onFocus={pause}
+        onBlur={resume}
+      >
         <div className="featured-review">
           <Stars />
           <p className="featured-quote">{renderQuote(r.quote, r.accentWord)}</p>
@@ -74,6 +88,7 @@ export default function Testimonials() {
           {REVIEWS.map((_, i) => (
             <button
               key={i}
+              type="button"
               className={i === idx ? "active" : ""}
               onClick={() => goReview(i)}
               aria-label={`Review ${i + 1}`}
@@ -81,36 +96,26 @@ export default function Testimonials() {
           ))}
         </div>
       </div>
-      <div className="reveal in" style={{ transitionDelay: "150ms" }}>
+      <div className="reveal in reveal-d150">
         <div className="small-reviews">
           <div className="small-review">
             <Stars />
-            <div>
-              &ldquo;Actually explains WHY, not just what. Game-changer.&rdquo;
-            </div>
+            <div>&ldquo;Actually explains WHY, not just what. Game-changer.&rdquo;</div>
             <div className="name">— David L.</div>
           </div>
           <div className="small-review">
             <Stars />
-            <div>
-              &ldquo;Patient, sharp, and fun. My wife and I both take lessons
-              now.&rdquo;
-            </div>
+            <div>&ldquo;Patient, sharp, and fun. My wife and I both take lessons now.&rdquo;</div>
             <div className="name">— Carlos M.</div>
           </div>
           <div className="small-review">
             <Stars />
-            <div>
-              &ldquo;First coach that made strategy feel doable at a 3.0
-              level.&rdquo;
-            </div>
+            <div>&ldquo;First coach that made strategy feel doable at a 3.0 level.&rdquo;</div>
             <div className="name">— Priya S.</div>
           </div>
           <div className="small-review">
             <Stars />
-            <div>
-              &ldquo;Showed up for my tournament to scout opponents. Unreal.&rdquo;
-            </div>
+            <div>&ldquo;Showed up for my tournament to scout opponents. Unreal.&rdquo;</div>
             <div className="name">— Tom B.</div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { TIMES, BOOKED, generateDays, type DaySlot } from "@/lib/data";
+import { useState, useEffect, useCallback } from "react";
+import { TIMES, generateDays, type DaySlot } from "@/lib/data";
 
 type Step = "form" | "picker" | "loading" | "error" | "confirmed";
 
@@ -29,8 +29,6 @@ const LESSON_PRICES: Record<string, string> = {
   clinic: "$55.00",
 };
 
-const FIRST_AVAILABLE = TIMES.find((t) => !BOOKED.has(t)) ?? TIMES[0];
-
 export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [step, setStep] = useState<Step>("form");
   const [form, setForm] = useState<FormData>({
@@ -41,10 +39,30 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   });
   const [days] = useState<DaySlot[]>(() => generateDays());
   const [selectedDay, setSelectedDay] = useState(0);
-  const [selectedTime, setSelectedTime] = useState(FIRST_AVAILABLE);
+  const [selectedTime, setSelectedTime] = useState("");
+  const [bookedTimes, setBookedTimes] = useState<Set<string>>(new Set());
+  const [availLoading, setAvailLoading] = useState(false);
   const [waiverAgreed, setWaiverAgreed] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [bookingId, setBookingId] = useState("");
+
+  const fetchAvailability = useCallback(async (dateStr: string) => {
+    setAvailLoading(true);
+    try {
+      const res = await fetch(`/api/availability?date=${dateStr}`);
+      if (res.ok) {
+        const { booked } = await res.json();
+        const booked_set = new Set<string>(booked);
+        setBookedTimes(booked_set);
+        setSelectedTime((prev) => {
+          if (prev && !booked_set.has(prev)) return prev;
+          return TIMES.find((t) => !booked_set.has(t)) ?? TIMES[0];
+        });
+      }
+    } finally {
+      setAvailLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -52,17 +70,24 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
       setStep("form");
       setForm({ name: "", email: "", phone: "", lessonType: "beginner" });
       setSelectedDay(0);
-      setSelectedTime(FIRST_AVAILABLE);
+      setBookedTimes(new Set());
+      setSelectedTime("");
       setWaiverAgreed(false);
       setErrorMsg("");
       setBookingId("");
+      fetchAvailability(days[0].dateStr);
     } else {
       document.body.style.overflow = "";
     }
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [isOpen, days, fetchAvailability]);
+
+  function handleDaySelect(i: number) {
+    setSelectedDay(i);
+    fetchAvailability(days[i].dateStr);
+  }
 
   async function confirmBooking() {
     setStep("loading");
@@ -111,13 +136,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           onClick={onClose}
           aria-label="Close"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-          >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
             <path d="M18 6 6 18M6 6l12 12" />
           </svg>
         </button>
@@ -166,10 +185,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 className="modal-select"
                 value={form.lessonType}
                 onChange={(e) =>
-                  setForm({
-                    ...form,
-                    lessonType: e.target.value as FormData["lessonType"],
-                  })
+                  setForm({ ...form, lessonType: e.target.value as FormData["lessonType"] })
                 }
               >
                 <option value="beginner">Foundations ($90)</option>
@@ -197,14 +213,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               onClick={() => setStep("picker")}
             >
               Next — pick a time
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
             </button>
@@ -224,7 +233,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                   key={i}
                   type="button"
                   className={`slot${selectedDay === i ? " selected" : ""}`}
-                  onClick={() => setSelectedDay(i)}
+                  onClick={() => handleDaySelect(i)}
                 >
                   <div className="d">{s.d}</div>
                   <div className="n">{s.n}</div>
@@ -234,22 +243,28 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <div className="label-tag mt">
               Select time <span className="tz-label">CT</span>
             </div>
-            <div className="time-grid">
-              {TIMES.map((t) => {
-                const isBooked = BOOKED.has(t);
-                return (
-                  <button
-                    key={t}
-                    type="button"
-                    className={`time-slot${selectedTime === t ? " selected" : ""}${isBooked ? " booked" : ""}`}
-                    disabled={isBooked}
-                    onClick={() => !isBooked && setSelectedTime(t)}
-                  >
-                    {t}
-                  </button>
-                );
-              })}
-            </div>
+            {availLoading ? (
+              <div className="avail-loading">
+                <div className="spinner" />
+              </div>
+            ) : (
+              <div className="time-grid">
+                {TIMES.map((t) => {
+                  const isBooked = bookedTimes.has(t);
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      className={`time-slot${selectedTime === t ? " selected" : ""}${isBooked ? " booked" : ""}`}
+                      disabled={isBooked}
+                      onClick={() => !isBooked && setSelectedTime(t)}
+                    >
+                      {t}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
             <div className="picker-actions">
               <button
                 type="button"
@@ -261,17 +276,11 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               <button
                 type="button"
                 className="btn btn-primary picker-confirm"
+                disabled={!selectedTime || availLoading}
                 onClick={confirmBooking}
               >
-                Confirm {day.d} {day.n} · {selectedTime}
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+                Confirm {day.d} {day.n} · {selectedTime || "…"}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M13 5l7 7-7 7" />
                 </svg>
               </button>
@@ -290,11 +299,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           <>
             <h3>Something went wrong</h3>
             <div className="modal-error">{errorMsg}</div>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => setStep("picker")}
-            >
+            <button type="button" className="btn btn-ghost" onClick={() => setStep("picker")}>
               Try again
             </button>
           </>
@@ -303,14 +308,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
         {step === "confirmed" && (
           <div className="modal-confirmed">
             <div className="confirm-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
@@ -333,24 +331,16 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               </div>
               <div className="booking-summary-row">
                 <span>Total</span>
-                <strong className="accent">
-                  {LESSON_PRICES[form.lessonType]}
-                </strong>
+                <strong className="accent">{LESSON_PRICES[form.lessonType]}</strong>
               </div>
               {bookingId && (
                 <div className="booking-summary-row">
                   <span>Booking ID</span>
-                  <strong className="booking-id-val">
-                    {bookingId.slice(0, 8).toUpperCase()}
-                  </strong>
+                  <strong className="booking-id-val">{bookingId.slice(0, 8).toUpperCase()}</strong>
                 </div>
               )}
             </div>
-            <button
-              type="button"
-              className="btn btn-ghost btn-full"
-              onClick={onClose}
-            >
+            <button type="button" className="btn btn-ghost btn-full" onClick={onClose}>
               Close
             </button>
           </div>

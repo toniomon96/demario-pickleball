@@ -1,3 +1,4 @@
+import Image from "next/image";
 import RevealWrapper from "./RevealWrapper";
 
 export default function About() {
@@ -10,10 +11,15 @@ export default function About() {
         </h2>
       </RevealWrapper>
       <RevealWrapper delay={80}>
-        <div
-          className="about-img"
-          style={{ backgroundImage: "url('/img/podium-solo.jpg')" }}
-        >
+        <div className="about-img">
+          <Image
+            src="/img/podium-solo.jpg"
+            alt="DeMario Montez on the pickleball court"
+            fill
+            className="gallery-img"
+            sizes="(max-width: 430px) 100vw, 430px"
+            priority
+          />
           <div className="about-badge">
             <div className="mini-badge">
               <span className="dot" />
@@ -59,28 +65,42 @@ export default function About() {
           <div className="kicker">On the Court</div>
         </div>
         <div className="gallery">
-          <div
-            className="tall"
-            style={{ backgroundImage: "url('/img/students-group.jpg')" }}
-            role="img"
-            aria-label="Students group photo"
-          />
-          <div
-            style={{ backgroundImage: "url('/img/student-selfie.jpg')" }}
-            role="img"
-            aria-label="Student selfie"
-          />
-          <div
-            style={{ backgroundImage: "url('/img/doubles-medal.jpg')" }}
-            role="img"
-            aria-label="Doubles medal"
-          />
-          <div
-            className="wide"
-            style={{ backgroundImage: "url('/img/podium-team.jpg')" }}
-            role="img"
-            aria-label="Podium team photo"
-          />
+          <div className="gallery-item tall">
+            <Image
+              src="/img/students-group.jpg"
+              alt="Students group photo"
+              fill
+              className="gallery-img"
+              sizes="(max-width: 430px) 60vw, 300px"
+            />
+          </div>
+          <div className="gallery-item">
+            <Image
+              src="/img/student-selfie.jpg"
+              alt="Student selfie with coach"
+              fill
+              className="gallery-img"
+              sizes="(max-width: 430px) 40vw, 200px"
+            />
+          </div>
+          <div className="gallery-item">
+            <Image
+              src="/img/doubles-medal.jpg"
+              alt="Doubles tournament medal"
+              fill
+              className="gallery-img"
+              sizes="(max-width: 430px) 40vw, 200px"
+            />
+          </div>
+          <div className="gallery-item wide">
+            <Image
+              src="/img/podium-team.jpg"
+              alt="Podium team photo"
+              fill
+              className="gallery-img"
+              sizes="(max-width: 430px) 100vw, 500px"
+            />
+          </div>
         </div>
       </RevealWrapper>
     </section>

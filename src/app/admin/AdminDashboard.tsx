@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Booking {
   id: string;
@@ -24,6 +24,13 @@ interface Inquiry {
   read: boolean;
 }
 
+interface BlockedSlot {
+  id: string;
+  date: string;
+  time: string;
+  created_at: string;
+}
+
 interface Props {
   initialBookings: Booking[];
   initialInquiries: Inquiry[];
@@ -35,17 +42,34 @@ const LESSON_NAMES: Record<string, string> = {
   clinic: "Group Clinic",
 };
 
-export default function AdminDashboard({
-  initialBookings,
-  initialInquiries,
-}: Props) {
-  const [tab, setTab] = useState<"bookings" | "inquiries">("bookings");
+const TIMES = ["7:00 AM", "9:00 AM", "11:00 AM", "1:00 PM", "3:00 PM", "5:30 PM"];
+
+export default function AdminDashboard({ initialBookings, initialInquiries }: Props) {
+  const [tab, setTab] = useState<"bookings" | "inquiries" | "availability">("bookings");
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
+  const [inquiries, setInquiries] = useState<Inquiry[]>(initialInquiries);
   const [updating, setUpdating] = useState<string | null>(null);
 
-  const unread = initialInquiries.filter((i) => !i.read).length;
+  // Availability state
+  const [blockedSlots, setBlockedSlots] = useState<BlockedSlot[]>([]);
+  const [blockDate, setBlockDate] = useState("");
+  const [blockTime, setBlockTime] = useState(TIMES[0]);
+  const [blockLoading, setBlockLoading] = useState(false);
+  const [blockError, setBlockError] = useState("");
+  const [avoidLoading, setAvoidLoading] = useState(false);
 
-  async function updateStatus(id: string, status: "confirmed" | "cancelled") {
+  const unread = inquiries.filter((i) => !i.read).length;
+
+  useEffect(() => {
+    if (tab !== "availability") return;
+    setAvoidLoading(true);
+    fetch("/api/blocked-slots")
+      .then((r) => r.json())
+      .then((data) => setBlockedSlots(Array.isArray(data) ? data : []))
+      .finally(() => setAvoidLoading(false));
+  }, [tab]);
+
+  async function updateBookingStatus(id: string, status: "confirmed" | "cancelled") {
     setUpdating(id);
     try {
       const res = await fetch(`/api/bookings/${id}`, {
@@ -55,10 +79,56 @@ export default function AdminDashboard({
       });
       if (res.ok) {
         const updated = await res.json();
-        setBookings((prev) =>
-          prev.map((b) => (b.id === id ? { ...b, status: updated.status } : b))
-        );
+        setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: updated.status } : b)));
       }
+    } finally {
+      setUpdating(null);
+    }
+  }
+
+  async function toggleRead(inq: Inquiry) {
+    setUpdating(inq.id);
+    try {
+      const res = await fetch(`/api/inquiries/${inq.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ read: !inq.read }),
+      });
+      if (res.ok) {
+        setInquiries((prev) => prev.map((i) => (i.id === inq.id ? { ...i, read: !i.read } : i)));
+      }
+    } finally {
+      setUpdating(null);
+    }
+  }
+
+  async function blockSlot() {
+    if (!blockDate || !blockTime) return;
+    setBlockLoading(true);
+    setBlockError("");
+    try {
+      const res = await fetch("/api/blocked-slots", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: blockDate, time: blockTime }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setBlockError(data.error ?? "Failed to block slot.");
+        return;
+      }
+      setBlockedSlots((prev) => [...prev, data].sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time)));
+      setBlockDate("");
+    } finally {
+      setBlockLoading(false);
+    }
+  }
+
+  async function unblockSlot(id: string) {
+    setUpdating(id);
+    try {
+      await fetch(`/api/blocked-slots/${id}`, { method: "DELETE" });
+      setBlockedSlots((prev) => prev.filter((s) => s.id !== id));
     } finally {
       setUpdating(null);
     }
@@ -74,20 +144,15 @@ export default function AdminDashboard({
       </div>
 
       <div className="admin-tabs">
-        <button
-          type="button"
-          className={`admin-tab${tab === "bookings" ? " active" : ""}`}
-          onClick={() => setTab("bookings")}
-        >
+        <button type="button" className={`admin-tab${tab === "bookings" ? " active" : ""}`} onClick={() => setTab("bookings")}>
           Bookings
         </button>
-        <button
-          type="button"
-          className={`admin-tab${tab === "inquiries" ? " active" : ""}`}
-          onClick={() => setTab("inquiries")}
-        >
+        <button type="button" className={`admin-tab${tab === "inquiries" ? " active" : ""}`} onClick={() => setTab("inquiries")}>
           Inquiries
           {unread > 0 && <span className="unread-dot" />}
+        </button>
+        <button type="button" className={`admin-tab${tab === "availability" ? " active" : ""}`} onClick={() => setTab("availability")}>
+          Availability
         </button>
       </div>
 
@@ -118,29 +183,23 @@ export default function AdminDashboard({
                     </td>
                     <td>{LESSON_NAMES[b.lesson_type] ?? b.lesson_type}</td>
                     <td>
-                      <span className={`status-badge status-${b.status}`}>
-                        {b.status}
-                      </span>
+                      <span className={`status-badge status-${b.status}`}>{b.status}</span>
                     </td>
                     <td>
                       <div className="td-actions">
                         <button
                           type="button"
                           className="admin-btn confirm"
-                          disabled={
-                            b.status === "confirmed" || updating === b.id
-                          }
-                          onClick={() => updateStatus(b.id, "confirmed")}
+                          disabled={b.status === "confirmed" || updating === b.id}
+                          onClick={() => updateBookingStatus(b.id, "confirmed")}
                         >
                           Confirm
                         </button>
                         <button
                           type="button"
                           className="admin-btn cancel"
-                          disabled={
-                            b.status === "cancelled" || updating === b.id
-                          }
-                          onClick={() => updateStatus(b.id, "cancelled")}
+                          disabled={b.status === "cancelled" || updating === b.id}
+                          onClick={() => updateBookingStatus(b.id, "cancelled")}
                         >
                           Cancel
                         </button>
@@ -156,23 +215,91 @@ export default function AdminDashboard({
 
       {tab === "inquiries" && (
         <div>
-          {initialInquiries.length === 0 ? (
+          {inquiries.length === 0 ? (
             <p className="admin-empty">No inquiries yet.</p>
           ) : (
-            initialInquiries.map((inq) => (
-              <div key={inq.id} className="inquiry-card">
-                <div className="inq-name">
-                  {inq.name}
-                  {!inq.read && <span className="unread-dot" />}
+            inquiries.map((inq) => (
+              <div key={inq.id} className={`inquiry-card${inq.read ? " inquiry-read" : ""}`}>
+                <div className="inq-header">
+                  <div className="inq-name">
+                    {inq.name}
+                    {!inq.read && <span className="unread-dot" />}
+                  </div>
+                  <button
+                    type="button"
+                    className="admin-btn"
+                    disabled={updating === inq.id}
+                    onClick={() => toggleRead(inq)}
+                  >
+                    {inq.read ? "Mark unread" : "Mark read"}
+                  </button>
                 </div>
                 <div className="inq-email">{inq.email}</div>
                 <div className="inq-msg">{inq.message}</div>
-                <div className="inq-date">
-                  {new Date(inq.created_at).toLocaleDateString()}
-                </div>
+                <div className="inq-date">{new Date(inq.created_at).toLocaleDateString()}</div>
               </div>
             ))
           )}
+        </div>
+      )}
+
+      {tab === "availability" && (
+        <div className="avail-admin">
+          <p className="admin-empty avail-intro">
+            Block specific time slots so students can&apos;t book them.
+          </p>
+          <div className="avail-form">
+            <input
+              className="modal-input avail-date-input"
+              type="date"
+              value={blockDate}
+              min={new Date().toISOString().split("T")[0]}
+              onChange={(e) => setBlockDate(e.target.value)}
+              aria-label="Date to block"
+            />
+            <select
+              className="modal-select avail-time-select"
+              value={blockTime}
+              onChange={(e) => setBlockTime(e.target.value)}
+              aria-label="Time to block"
+            >
+              {TIMES.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+            <button
+              type="button"
+              className="admin-btn avail-block-btn"
+              disabled={!blockDate || blockLoading}
+              onClick={blockSlot}
+            >
+              {blockLoading ? "Blocking…" : "Block slot"}
+            </button>
+          </div>
+          {blockError && <div className="modal-error avail-error">{blockError}</div>}
+
+          <div className="avail-list">
+            {avoidLoading ? (
+              <p className="admin-empty">Loading…</p>
+            ) : blockedSlots.length === 0 ? (
+              <p className="admin-empty">No blocked slots.</p>
+            ) : (
+              blockedSlots.map((s) => (
+                <div key={s.id} className="avail-row">
+                  <span className="avail-date">{s.date}</span>
+                  <span className="avail-time">{s.time}</span>
+                  <button
+                    type="button"
+                    className="admin-btn cancel"
+                    disabled={updating === s.id}
+                    onClick={() => unblockSlot(s.id)}
+                  >
+                    Unblock
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       )}
     </div>
