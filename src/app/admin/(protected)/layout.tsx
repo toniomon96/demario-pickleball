@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createServerSupabaseClient, isAdminEmail } from "@/lib/supabase/server";
 import AdminShell from "../AdminShell";
 
 export default async function ProtectedAdminLayout({
@@ -12,7 +12,7 @@ export default async function ProtectedAdminLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/admin/login");
+  if (!user || !isAdminEmail(user.email)) redirect("/admin/login");
 
   return <AdminShell>{children}</AdminShell>;
 }

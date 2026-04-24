@@ -16,7 +16,7 @@ export default function FinalCta({ onOpenBooking }: FinalCtaProps) {
           things to practice.
         </p>
         <div className="cta-inline">
-          <button className="btn btn-primary" onClick={onOpenBooking}>
+          <button type="button" className="btn btn-primary" onClick={onOpenBooking}>
             Book your first lesson
             <svg
               viewBox="0 0 24 24"

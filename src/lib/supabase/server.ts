@@ -1,6 +1,12 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+export function isAdminEmail(email: string | undefined): boolean {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) return false;
+  return email === adminEmail;
+}
+
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies();
   return createServerClient(

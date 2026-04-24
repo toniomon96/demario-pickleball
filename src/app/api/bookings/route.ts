@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createServerSupabaseClient, isAdminEmail } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 
 const VALID_LESSON_TYPES = ["beginner", "advanced", "clinic"] as const;
@@ -34,8 +34,9 @@ export async function POST(req: NextRequest) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(lesson_date)) {
     return NextResponse.json({ error: "Invalid date" }, { status: 400 });
   }
-  const today = new Date().toISOString().split("T")[0];
-  if (lesson_date < today) {
+  const yesterday = new Date();
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  if (lesson_date <= yesterday.toISOString().split("T")[0]) {
     return NextResponse.json({ error: "Cannot book a date in the past" }, { status: 400 });
   }
   if (!VALID_TIMES.includes(lesson_time)) {
@@ -46,6 +47,17 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = anonClient();
+
+  const { data: blockedSlot } = await supabase
+    .from("blocked_slots")
+    .select("id")
+    .eq("date", lesson_date)
+    .eq("time", lesson_time)
+    .maybeSingle();
+  if (blockedSlot) {
+    return NextResponse.json({ error: "That time slot is not available." }, { status: 409 });
+  }
+
   const { data, error } = await supabase
     .from("bookings")
     .insert({
@@ -73,7 +85,7 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user || !isAdminEmail(user.email)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data, error } = await supabase
     .from("bookings")

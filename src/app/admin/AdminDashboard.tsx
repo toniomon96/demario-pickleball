@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Booking {
   id: string;
@@ -59,11 +59,12 @@ export default function AdminDashboard({ initialBookings, initialInquiries }: Pr
   const [blockError, setBlockError] = useState("");
   const [availLoading, setAvailLoading] = useState(false);
   const [availFetchError, setAvailFetchError] = useState("");
+  const hasLoadedAvailRef = useRef(false);
 
   const unread = inquiries.filter((i) => !i.read).length;
 
   useEffect(() => {
-    if (tab !== "availability") return;
+    if (tab !== "availability" || hasLoadedAvailRef.current) return;
     setAvailLoading(true);
     setAvailFetchError("");
     fetch("/api/blocked-slots")
@@ -71,7 +72,10 @@ export default function AdminDashboard({ initialBookings, initialInquiries }: Pr
         if (!r.ok) throw new Error("Failed to load blocked slots.");
         return r.json();
       })
-      .then((data) => setBlockedSlots(Array.isArray(data) ? data : []))
+      .then((data) => {
+        setBlockedSlots(Array.isArray(data) ? data : []);
+        hasLoadedAvailRef.current = true;
+      })
       .catch(() => setAvailFetchError("Failed to load blocked slots. Please refresh the page."))
       .finally(() => setAvailLoading(false));
   }, [tab]);

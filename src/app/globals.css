@@ -1153,6 +1153,13 @@ textarea.modal-input { resize: vertical; min-height: 100px; }
 .reveal-d150 { transition-delay: 150ms; }
 
 /* ====== AVAILABILITY LOADING ====== */
+.avail-all-booked {
+  font-size: 13px;
+  color: var(--fg-muted);
+  text-align: center;
+  padding: 16px 0;
+  margin-bottom: 8px;
+}
 .avail-fetch-error {
   display: flex;
   flex-direction: column;

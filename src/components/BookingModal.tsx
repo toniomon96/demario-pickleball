@@ -39,7 +39,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     phone: "",
     lessonType: "beginner",
   });
-  const [days] = useState<DaySlot[]>(() => generateDays());
+  const [days, setDays] = useState<DaySlot[]>(() => generateDays());
   const [selectedDay, setSelectedDay] = useState(0);
   const [selectedTime, setSelectedTime] = useState("");
   const [bookedTimes, setBookedTimes] = useState<Set<string>>(new Set());
@@ -62,7 +62,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
       setBookedTimes(booked_set);
       setSelectedTime((prev) => {
         if (prev && !booked_set.has(prev)) return prev;
-        return TIMES.find((t) => !booked_set.has(t)) ?? TIMES[0];
+        return TIMES.find((t) => !booked_set.has(t)) ?? "";
       });
     } catch {
       setAvailError("Could not load availability. Please try again.");
@@ -73,6 +73,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
   useEffect(() => {
     if (isOpen) {
+      const freshDays = generateDays();
+      setDays(freshDays);
       document.body.style.overflow = "hidden";
       setStep("form");
       setForm({ name: "", email: "", phone: "", lessonType: "beginner" });
@@ -84,14 +86,14 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
       setPickerError("");
       setErrorMsg("");
       setBookingId("");
-      fetchAvailability(days[0].dateStr);
+      fetchAvailability(freshDays[0].dateStr);
     } else {
       document.body.style.overflow = "";
     }
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen, days, fetchAvailability]);
+  }, [isOpen, fetchAvailability]);
 
   function handleDaySelect(i: number) {
     setSelectedDay(i);
@@ -282,6 +284,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                   Retry
                 </button>
               </div>
+            ) : TIMES.every((t) => bookedTimes.has(t)) ? (
+              <p className="avail-all-booked">No available times for this date. Please select a different day.</p>
             ) : (
               <div className="time-grid">
                 {TIMES.map((t) => {
