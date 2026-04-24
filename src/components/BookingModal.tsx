@@ -23,6 +23,8 @@ const LESSON_LABELS: Record<string, string> = {
   clinic: "Group Clinic ($50)",
 };
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const LESSON_PRICES: Record<string, string> = {
   beginner: "$70.00",
   advanced: "$80.00",
@@ -234,7 +236,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <button
               type="button"
               className="btn btn-primary"
-              disabled={!form.name || !form.email || !waiverAgreed}
+              disabled={!form.name.trim() || !EMAIL_RE.test(form.email) || !waiverAgreed}
               onClick={() => setStep("picker")}
             >
               Next — pick a time

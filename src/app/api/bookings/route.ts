@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       lesson_type,
       lesson_date,
       lesson_time,
-      notes: notes ? String(notes).trim().slice(0, 500) || null : null,
+      notes: (typeof notes === "string" && notes.trim()) ? notes.trim().slice(0, 500) : null,
     })
     .select()
     .single();

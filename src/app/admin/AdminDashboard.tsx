@@ -58,15 +58,21 @@ export default function AdminDashboard({ initialBookings, initialInquiries }: Pr
   const [blockLoading, setBlockLoading] = useState(false);
   const [blockError, setBlockError] = useState("");
   const [availLoading, setAvailLoading] = useState(false);
+  const [availFetchError, setAvailFetchError] = useState("");
 
   const unread = inquiries.filter((i) => !i.read).length;
 
   useEffect(() => {
     if (tab !== "availability") return;
     setAvailLoading(true);
+    setAvailFetchError("");
     fetch("/api/blocked-slots")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to load blocked slots.");
+        return r.json();
+      })
       .then((data) => setBlockedSlots(Array.isArray(data) ? data : []))
+      .catch(() => setAvailFetchError("Failed to load blocked slots. Please refresh the page."))
       .finally(() => setAvailLoading(false));
   }, [tab]);
 
@@ -288,6 +294,7 @@ export default function AdminDashboard({ initialBookings, initialInquiries }: Pr
           {blockError && <div className="modal-error avail-error">{blockError}</div>}
 
           <div className="avail-list">
+            {availFetchError && <div className="modal-error">{availFetchError}</div>}
             {availLoading ? (
               <p className="admin-empty">Loading…</p>
             ) : blockedSlots.length === 0 ? (

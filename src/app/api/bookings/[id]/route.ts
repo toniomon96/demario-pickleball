@@ -27,7 +27,7 @@ export async function PATCH(
     .select()
     .single();
 
-  if (error?.code === "PGRST116") {
+  if (error?.code === "PGRST116" || !data) {
     return NextResponse.json({ error: "Booking not found" }, { status: 404 });
   }
   if (error) {

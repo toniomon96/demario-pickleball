@@ -16,7 +16,10 @@ export async function DELETE(
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
 
-  const { error } = await supabase.from("blocked_slots").delete().eq("id", id);
+  const { error } = await supabase.from("blocked_slots").delete().eq("id", id).select().single();
+  if (error?.code === "PGRST116") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
   if (error) {
     console.error("[blocked-slots DELETE]", error);
     return NextResponse.json({ error: "Failed to unblock slot." }, { status: 500 });
